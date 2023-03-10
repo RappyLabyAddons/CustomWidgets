@@ -1,6 +1,7 @@
 package com.rappytv.widgets.gui.activities;
 
 import com.rappytv.widgets.WidgetAddon;
+import com.rappytv.widgets.gui.widgets.GuiWidget;
 import com.rappytv.widgets.gui.widgets.GuiWidgetProperties;
 import net.labymod.api.client.gui.screen.LabyScreen;
 import net.labymod.api.client.gui.screen.Parent;

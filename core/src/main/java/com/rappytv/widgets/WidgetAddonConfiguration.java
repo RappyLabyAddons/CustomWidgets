@@ -7,19 +7,24 @@ import net.labymod.api.client.gui.screen.activity.Activity;
 import net.labymod.api.client.gui.screen.widget.widgets.activity.settings.ActivitySettingWidget.ActivitySetting;
 import net.labymod.api.client.gui.screen.widget.widgets.input.SwitchWidget.SwitchSetting;
 import net.labymod.api.configuration.loader.annotation.ConfigName;
+import net.labymod.api.configuration.loader.annotation.SpriteSlot;
+import net.labymod.api.configuration.loader.annotation.SpriteTexture;
 import net.labymod.api.configuration.loader.property.ConfigProperty;
 import net.labymod.api.util.MethodOrder;
 import java.util.HashMap;
 
 @ConfigName("settings")
+@SpriteTexture("settings")
 public class WidgetAddonConfiguration extends AddonConfig {
 
     @SwitchSetting
+    @SpriteSlot(size = 32)
     private final ConfigProperty<Boolean> enabled = new ConfigProperty<>(true);
     private final ConfigProperty<HashMap<Integer, GuiWidgetProperties>> widget = new ConfigProperty<>(new HashMap<>());
 
     @MethodOrder(after = "enabled")
     @ActivitySetting
+    @SpriteSlot(size = 32, x = 1)
     public Activity openWidgetActivity() {
         return new WidgetActivity(WidgetAddon.get());
     }

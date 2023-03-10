@@ -22,8 +22,8 @@ public class ListWidget extends SimpleWidget {
     public void initialize(Parent parent) {
         super.initialize(parent);
 
-        ResourceLocation resourceLocation = ResourceLocation.create("widgets", "sprites.png");
-        IconWidget iconWidget = new IconWidget(Icon.sprite16(resourceLocation, 0, 0));
+        ResourceLocation resourceLocation = ResourceLocation.create("widgets", "widget.png");
+        IconWidget iconWidget = new IconWidget(Icon.texture(resourceLocation).resolution(64, 64));
         iconWidget.addId("avatar");
         this.addChild(iconWidget);
         ComponentWidget labelWidget = ComponentWidget.component(Component.text(this.properties.getLabel()));
