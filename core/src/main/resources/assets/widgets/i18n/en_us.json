@@ -1,0 +1,10 @@
+{
+    "widgets": {
+        "settings": {
+            "name": "Custom Widgets",
+            "enabled": {
+                "name": "Enabled"
+            }
+        }
+    }
+}
