@@ -1,4 +1,4 @@
-rootProject.name = "CustomWidets"
+rootProject.name = "CustomWidgets"
 
 pluginManagement {
     val labyGradlePluginVersion = "0.3.19"
