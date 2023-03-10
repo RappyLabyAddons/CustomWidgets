@@ -28,7 +28,7 @@ import java.util.Objects;
 public class WidgetActivity extends Activity {
 
     private final WidgetAddon addon;
-    private final VerticalListWidget<ListWidget> textReplacementList;
+    private final VerticalListWidget<ListWidget> widgetList;
     private final List<ListWidget> widgets;
     private ButtonWidget removeButton;
     private ButtonWidget editButton;
@@ -39,13 +39,13 @@ public class WidgetActivity extends Activity {
         this.addon = addon;
         this.widgets = new ArrayList<>();
         addon.configuration().getWidgets().forEach((ID, widget) -> this.widgets.add(new ListWidget(widget)));
-        this.textReplacementList = new VerticalListWidget<>();
-        this.textReplacementList.addId("custom-widget-list");
-        this.textReplacementList.setSelectCallback((widget) -> {
+        this.widgetList = new VerticalListWidget<>();
+        this.widgetList.addId("custom-widget-list");
+        this.widgetList.setSelectCallback((widget) -> {
             this.editButton.setEnabled(true);
             this.removeButton.setEnabled(true);
         });
-        this.textReplacementList.setDoubleClickCallback((widget) -> this.setAction(Action.EDIT));
+        this.widgetList.setDoubleClickCallback((widget) -> this.setAction(Action.EDIT));
     }
 
     public void initialize(Parent parent) {
@@ -54,19 +54,19 @@ public class WidgetActivity extends Activity {
         container.addId("custom-widget-container");
 
         for(ListWidget widget : this.widgets) {
-            this.textReplacementList.addChild(widget);
+            this.widgetList.addChild(widget);
         }
 
-        container.addFlexibleContent(new ScrollWidget(this.textReplacementList));
-        ListWidget selectedTextReplacement = this.textReplacementList.session().getSelectedEntry();
+        container.addFlexibleContent(new ScrollWidget(this.widgetList));
+        ListWidget selectedCustomWidget = this.widgetList.session().getSelectedEntry();
         HorizontalListWidget menu = new HorizontalListWidget();
         menu.addId("overview-button-menu");
         menu.addEntry(ButtonWidget.i18n("labymod.ui.button.add", () -> this.setAction(Action.ADD)));
         this.editButton = ButtonWidget.i18n("labymod.ui.button.edit", () -> this.setAction(Action.EDIT));
-        this.editButton.setEnabled(Objects.nonNull(selectedTextReplacement));
+        this.editButton.setEnabled(Objects.nonNull(selectedCustomWidget));
         menu.addEntry(this.editButton);
         this.removeButton = ButtonWidget.i18n("labymod.ui.button.remove", () -> this.setAction(Action.REMOVE));
-        this.removeButton.setEnabled(Objects.nonNull(selectedTextReplacement));
+        this.removeButton.setEnabled(Objects.nonNull(selectedCustomWidget));
         menu.addEntry(this.removeButton);
         container.addContent(menu);
         this.document().addChild(container);
@@ -81,10 +81,10 @@ public class WidgetActivity extends Activity {
                     overlayWidget = this.initializeManageContainer(newTextReplacement);
                     break;
                 case EDIT:
-                    overlayWidget = this.initializeManageContainer(selectedTextReplacement);
+                    overlayWidget = this.initializeManageContainer(selectedCustomWidget);
                     break;
                 case REMOVE:
-                    overlayWidget = this.initializeRemoveContainer(selectedTextReplacement);
+                    overlayWidget = this.initializeRemoveContainer(selectedCustomWidget);
             }
 
             manageContainer.addChild(overlayWidget);
@@ -92,30 +92,30 @@ public class WidgetActivity extends Activity {
         }
     }
 
-    private FlexibleContentWidget initializeRemoveContainer(
-        ListWidget textReplacementWidget) {
+    private FlexibleContentWidget initializeRemoveContainer(ListWidget customWidget) {
         this.inputWidget = new FlexibleContentWidget();
         this.inputWidget.addId("remove-container");
         ComponentWidget confirmationWidget = ComponentWidget.i18n("widgets.gui.widgets.manage.remove");
         confirmationWidget.addId("remove-confirmation");
         this.inputWidget.addContent(confirmationWidget);
-        ListWidget previewWidget = new ListWidget(textReplacementWidget.getProperties());
+        ListWidget previewWidget = new ListWidget(customWidget.getProperties());
         previewWidget.addId("remove-preview");
         this.inputWidget.addContent(previewWidget);
         HorizontalListWidget menu = new HorizontalListWidget();
         menu.addId("remove-button-menu");
         menu.addEntry(ButtonWidget.i18n("labymod.ui.button.remove", () -> {
-            this.addon.configuration().getWidgets().remove(textReplacementWidget.getProperties().getID());
-            this.widgets.remove(textReplacementWidget);
-            this.textReplacementList.session().setSelectedEntry(null);
+            this.addon.configuration().getWidgets().remove(customWidget.getProperties().getID());
+            this.widgets.remove(customWidget);
+            this.widgetList.session().setSelectedEntry(null);
             this.setAction(null);
         }));
         menu.addEntry(ButtonWidget.i18n("labymod.ui.button.cancel", () -> this.setAction(null)));
         this.inputWidget.addContent(menu);
+        WidgetAddon.get().labyAPI().hudWidgetRegistry().unregister("custom_widget_" + customWidget.getProperties().getID());
         return this.inputWidget;
     }
 
-    private DivWidget initializeManageContainer(ListWidget textReplacementWidget) {
+    private DivWidget initializeManageContainer(ListWidget customWidget) {
         ButtonWidget doneButton = ButtonWidget.i18n("labymod.ui.button.done");
         TextFieldWidget valueTextField = new TextFieldWidget();
         DivWidget inputContainer = new DivWidget();
@@ -126,7 +126,7 @@ public class WidgetActivity extends Activity {
         labelText.addId("label-text");
         this.inputWidget.addContent(labelText);
         TextFieldWidget labelTextField = new TextFieldWidget();
-        labelTextField.setText(textReplacementWidget.getProperties().getLabel());
+        labelTextField.setText(customWidget.getProperties().getLabel());
         labelTextField.updateListener((newValue) ->
             doneButton.setEnabled(!labelTextField.getText().trim().isEmpty() && !valueTextField.getText().trim().isEmpty())
         );
@@ -134,7 +134,7 @@ public class WidgetActivity extends Activity {
         ComponentWidget valueText = ComponentWidget.i18n("widgets.gui.widgets.manage.value");
         valueText.addId("label-text");
         this.inputWidget.addContent(valueText);
-        valueTextField.setText(textReplacementWidget.getProperties().getValue());
+        valueTextField.setText(customWidget.getProperties().getValue());
         valueTextField.updateListener((newValue) ->
             doneButton.setEnabled(!labelTextField.getText().trim().isEmpty() && !valueTextField.getText().trim().isEmpty())
         );
@@ -143,14 +143,17 @@ public class WidgetActivity extends Activity {
         buttonList.addId("edit-button-menu");
         doneButton.setEnabled(!labelTextField.getText().trim().isEmpty() && !valueTextField.getText().trim().isEmpty());
         doneButton.setPressable(() -> {
-            this.addon.configuration().getWidgets().remove(textReplacementWidget.getProperties().getID());
-            GuiWidgetProperties customWidget = textReplacementWidget.getProperties();
-            customWidget.setLabel(labelTextField.getText());
-            customWidget.setValue(valueTextField.getText());
-            this.addon.configuration().getWidgets().put(customWidget.getID(), customWidget);
-            this.widgets.remove(textReplacementWidget);
-            this.widgets.add(new ListWidget(customWidget));
+            this.addon.configuration().getWidgets().remove(customWidget.getProperties().getID());
+            GuiWidgetProperties customWidgetProperties = customWidget.getProperties();
+            customWidgetProperties.setLabel(labelTextField.getText());
+            customWidgetProperties.setValue(valueTextField.getText());
+            this.addon.configuration().getWidgets().put(customWidgetProperties.getID(), customWidgetProperties);
+            this.widgets.remove(customWidget);
+            this.widgets.add(new ListWidget(customWidgetProperties));
             this.setAction(null);
+            if(WidgetAddon.get().labyAPI().hudWidgetRegistry().getById("custom_widget_" + customWidget.getProperties().getID()) != null)
+                WidgetAddon.get().labyAPI().hudWidgetRegistry().unregister("custom_widget_" + customWidget.getProperties().getID());
+            WidgetAddon.get().labyAPI().hudWidgetRegistry().register(new GuiWidget(customWidgetProperties));
         });
         buttonList.addEntry(doneButton);
         buttonList.addEntry(ButtonWidget.i18n("labymod.ui.button.cancel", () -> this.setAction(null)));

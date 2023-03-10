@@ -11,10 +11,11 @@ public class GuiWidget extends TextHudWidget<TextHudWidgetConfig> {
 
     public GuiWidget(GuiWidgetProperties widget) {
         super("custom_widget_" + widget.getID());
+        super.bindCategory(new GuiWidgetCategory());
         this.properties = widget;
     }
 
-    public void load() {
+    public void load(TextHudWidgetConfig config) {
         super.load(config);
         this.line = super.createLine(properties.getLabel(), properties.getValue());
         this.setIcon(null);

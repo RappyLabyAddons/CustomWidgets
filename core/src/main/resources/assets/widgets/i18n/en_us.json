@@ -4,6 +4,26 @@
             "name": "Custom Widgets",
             "enabled": {
                 "name": "Enabled"
+            },
+            "openWidgetActivity":  {
+                "name": "Edit widgets"
+            }
+        },
+        "gui": {
+            "widgets": {
+                "manage": {
+                    "label": "Label",
+                    "value": "Value",
+                    "remove": "Are you sure you want to delete this Widget?"
+                }
+            }
+        }
+    },
+    "labymod": {
+        "hudWidgetCategory": {
+            "custom_widgets": {
+                "name": "Custom Widgets",
+                "description": "Here your custom created Widgets will display."
             }
         }
     }
