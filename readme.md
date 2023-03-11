@@ -21,6 +21,7 @@ If you have any problems with the addon/have update ideas, feel free to
 ### TODO
 - Fix naming of the Widgets
 - Implement custom Variables
+- add images
 
 ---
 
