@@ -22,8 +22,8 @@ public class WidgetAddon extends LabyAddon<WidgetAddonConfiguration> {
             Path: 'themes/vanilla/textures/settings/main/laby_1.png'
             Slots: X4;Y2
         *****************************/
-        ResourceLocation resource = ResourceLocation.create("widgets", "themes/vanilla/textures/settings.png");
-        widgetIcon = Icon.sprite32(resource, 1, 0);
+        ResourceLocation resource = ResourceLocation.create("widgets", "themes/vanilla/textures/settings/hud/hud.png");
+        widgetIcon = Icon.sprite32(resource, 0, 0);
 
         registerSettingCategory();
         labyAPI().hudWidgetRegistry().categoryRegistry().register(new GuiWidgetCategory());

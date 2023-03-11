@@ -19,9 +19,9 @@ If you have any problems with the addon/have update ideas, feel free to
 - Open a ticket on my [Discord Server](https://rappytv.com/server) in [this](https://discord.com/channels/815912035124248587/840285653946204181) channel
 
 ### TODO
-- Fix naming of the Widgets
-- Implement custom Variables
-- add images
+- [] Fix naming of the Widgets
+- [] Implement custom Variables
+- [x] add images
 
 ---
 

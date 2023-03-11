@@ -1,12 +1,11 @@
 package com.rappytv.widgets.gui.widgets;
 
+import com.rappytv.widgets.WidgetAddon;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidget;
 import net.labymod.api.client.gui.hud.hudwidget.text.TextHudWidgetConfig;
-import net.labymod.api.client.gui.hud.hudwidget.text.TextLine;
 
 public class GuiWidget extends TextHudWidget<TextHudWidgetConfig> {
 
-    private TextLine line;
     private final GuiWidgetProperties properties;
 
     public GuiWidget(GuiWidgetProperties widget) {
@@ -17,13 +16,7 @@ public class GuiWidget extends TextHudWidget<TextHudWidgetConfig> {
 
     public void load(TextHudWidgetConfig config) {
         super.load(config);
-        this.line = super.createLine(properties.getLabel(), properties.getValue());
-        this.setIcon(null);
-    }
-
-    public void updateLine(GuiWidgetProperties properties) {
-        this.properties.setLabel(properties.getLabel());
-        this.properties.setValue(properties.getValue());
-        this.line.updateAndFlush(properties.getValue());
+        super.createLine(properties.getLabel(), properties.getValue());
+        super.setIcon(WidgetAddon.widgetIcon);
     }
 }
