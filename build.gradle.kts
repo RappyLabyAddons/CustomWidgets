@@ -21,7 +21,7 @@ labyMod {
         author = "RappyTV#6969"
         description = "This addon allows you to create your own Widgets and assign custom values to them."
         minecraftVersion = "*"
-        version = System.getenv().getOrDefault("VERSION", "1.0.0")
+        version = System.getenv().getOrDefault("VERSION", "0.0.9")
     }
 
     minecraft {
