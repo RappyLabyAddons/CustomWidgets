@@ -1,4 +1,6 @@
-# **Custom Widgets (LabyMod 4)**
+# 🗄️ goofy addon which didn't work. discontinued
+
+### **Custom Widgets (LabyMod 4)**
 > With this plugin you can create custom Widgets and add them to your Screen.
 
 ### You can customize these Settings:
